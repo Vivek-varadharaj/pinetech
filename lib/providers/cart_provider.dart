@@ -9,19 +9,21 @@ class CartProvider extends ChangeNotifier {
   Category? selectedCategory;
 
   bool addOrRemoveProduct(Product product) {
-    if (canAddProduct()) {
+    {
       if (cartProduct.where((element) => element.id == product.id).isNotEmpty) {
         cartProduct.removeWhere(
           (element) => element.id == product.id,
         );
       } else {
-        cartProduct.add(product);
+        if (canAddProduct()) {
+          cartProduct.add(product);
+        } else {
+          return false;
+        }
       }
       print(cartProduct);
       notifyListeners();
       return true;
-    } else {
-      return false;
     }
   }
 

@@ -19,6 +19,13 @@ class _CartCanvasScreenState extends State<CartCanvasScreen> {
     MyImage(isSelected: false, position: Offset(10, 240), scale: 1),
     MyImage(isSelected: false, position: Offset(120, 240), scale: 1),
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    images = images.sublist(0,
+        Provider.of<CartProvider>(context, listen: false).cartProduct.length);
+  }
 
   @override
   Widget build(BuildContext context) {
