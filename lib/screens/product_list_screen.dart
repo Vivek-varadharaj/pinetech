@@ -1,13 +1,9 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:pinetech/main.dart';
 import 'package:pinetech/providers/cart_provider.dart';
 import 'package:pinetech/providers/category_provider.dart';
 import 'package:pinetech/providers/product_provider.dart';
-import 'package:pinetech/screens/cart_canvas_screen.dart';
 import 'package:pinetech/widget/goto_canvas_button.dart';
 import 'package:pinetech/widget/product_card.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +18,7 @@ class ProductListScreen extends StatefulWidget {
 class _ProductListScreenState extends State<ProductListScreen> {
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     Provider.of<ProductProvider>(context, listen: false).getProducts(
         Provider.of<CategoryProvider>(context, listen: false)
@@ -37,7 +33,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text(
+        title: const Text(
           "Select Products",
           textAlign: TextAlign.left,
           style: TextStyle(
@@ -56,7 +52,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       Expanded(
@@ -72,7 +68,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                     if (!cartProvider
                                         .addOrRemoveProduct(product)) {
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
+                                          .showSnackBar(const SnackBar(
                                               duration: Duration(seconds: 2),
                                               behavior:
                                                   SnackBarBehavior.floating,

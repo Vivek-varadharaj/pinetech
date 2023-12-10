@@ -17,20 +17,20 @@ class GotoCanvasButton extends StatelessWidget {
                     child: InkWell(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CartCanvasScreen(),
+                          builder: (context) => const CartCanvasScreen(),
                         ));
                       },
                       child: Container(
                         width: double.infinity,
-                        padding: EdgeInsets.symmetric(vertical: 20),
+                        padding: const EdgeInsets.symmetric(vertical: 20),
                         clipBehavior: Clip.hardEdge,
                         decoration: BoxDecoration(
                             color: Colors.amber,
                             borderRadius: BorderRadius.circular(10)),
-                        child: Center(child: Text("Go to cart canvas")),
+                        child: const Center(child: Text("Go to cart canvas")),
                       ),
                     ),
                   )
-                : SizedBox());
+                : const SizedBox());
   }
 }

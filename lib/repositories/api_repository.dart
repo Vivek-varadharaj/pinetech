@@ -1,6 +1,4 @@
 import 'package:http/http.dart';
-import 'package:pinetech/models/category.dart';
-import 'package:pinetech/models/product.dart';
 
 import 'package:pinetech/services/network_services.dart';
 import 'package:pinetech/utils/app_constants.dart';
@@ -15,13 +13,13 @@ class ApiRepository {
 
   Future<Response> fetchProductsByCategory(String categoryId) async {
     // Implement API call to fetch products by category
-    return await apiService.get(getProductsFromCategory + "/$categoryId");
+    return await apiService.get("$getProductsFromCategory/$categoryId");
   }
 }
 
 class ResponseModel {
-  bool _isSuccess;
-  String _message;
+  final bool _isSuccess;
+  final String _message;
 
   ResponseModel(
     this._isSuccess,

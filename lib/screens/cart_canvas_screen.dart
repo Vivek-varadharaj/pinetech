@@ -7,6 +7,8 @@ import 'package:pinetech/providers/zoom_and_position_provider.dart';
 import 'package:provider/provider.dart';
 
 class CartCanvasScreen extends StatefulWidget {
+  const CartCanvasScreen({super.key});
+
   @override
   _CartCanvasScreenState createState() => _CartCanvasScreenState();
 }
@@ -17,8 +19,7 @@ class _CartCanvasScreenState extends State<CartCanvasScreen> {
   bool isScaleEnabled = false;
 
   @override
-  void initState() {
-    // TODO: implement initState
+  void initState() { 
     super.initState();
     Provider.of<ZoomAndPostionProvider>(context, listen: false).buildingList =
         Provider.of<ZoomAndPostionProvider>(context, listen: false)
@@ -36,7 +37,7 @@ class _CartCanvasScreenState extends State<CartCanvasScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text(
+        title: const Text(
           "Categories",
           textAlign: TextAlign.left,
           style: TextStyle(
@@ -48,7 +49,7 @@ class _CartCanvasScreenState extends State<CartCanvasScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Expanded(
@@ -57,7 +58,7 @@ class _CartCanvasScreenState extends State<CartCanvasScreen> {
                   child: DottedBorder(
                     padding: EdgeInsets.zero,
                     strokeWidth: 1,
-                    radius: Radius.circular(10),
+                    radius: const Radius.circular(10),
                     child: Container(
                       clipBehavior: Clip.hardEdge,
                       height: MediaQuery.of(context).size.height - 200,

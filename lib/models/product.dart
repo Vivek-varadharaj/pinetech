@@ -1,4 +1,3 @@
-import 'package:provider/provider.dart';
 
 class Product {
   final int id;

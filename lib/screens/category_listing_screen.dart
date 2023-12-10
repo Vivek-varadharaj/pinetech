@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:pinetech/providers/cart_provider.dart';
 import 'package:pinetech/providers/category_provider.dart';
 import 'package:pinetech/repositories/api_repository.dart';
-import 'package:pinetech/screens/cart_canvas_screen.dart';
 import 'package:pinetech/screens/product_list_screen.dart';
 import 'package:pinetech/widget/goto_canvas_button.dart';
 import 'package:provider/provider.dart';
 
 class CategoryListScreen extends StatefulWidget {
+  const CategoryListScreen({super.key});
+
   @override
   State<CategoryListScreen> createState() => _CategoryListScreenState();
 }
@@ -25,6 +24,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
         await Provider.of<CategoryProvider>(context, listen: false)
             .getCategories();
     if (!response.isSuccess) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(response.message)));
     }
@@ -38,7 +38,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           automaticallyImplyLeading: true,
-          title: Text(
+          title: const Text(
             "Categories",
             textAlign: TextAlign.left,
             style: TextStyle(
@@ -47,7 +47,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
         ),
         body: SafeArea(
           child: categoryProvider.isLoading
-              ? Center(
+              ? const Center(
                   child: CircularProgressIndicator(),
                 )
               : Column(
@@ -55,7 +55,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                   children: [
                     Container(
                       color: Colors.white,
-                      child: Column(
+                      child: const Column(
                         children: [
                           SizedBox(
                             height: 20,
@@ -65,7 +65,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                     ),
                     Expanded(
                       child: ListView(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         children: [
                           ...categoryProvider.categories
                               .map((category) => Padding(
@@ -73,17 +73,17 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                                         const EdgeInsets.only(bottom: 10.0),
                                     child: ListTile(
                                       tileColor:
-                                          Color.fromARGB(255, 240, 233, 233),
+                                          const Color.fromARGB(255, 240, 233, 233),
                                       style: ListTileStyle.drawer,
                                       trailing:
-                                          Icon(Icons.keyboard_arrow_right),
+                                          const Icon(Icons.keyboard_arrow_right),
                                       onTap: () {
                                         categoryProvider
                                             .setSelectedCategory(category);
                                         Navigator.of(context)
                                             .push(MaterialPageRoute(
                                           builder: (context) =>
-                                              ProductListScreen(),
+                                              const ProductListScreen(),
                                         ));
                                       },
                                       title: Text(category.name),

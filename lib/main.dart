@@ -8,10 +8,12 @@ import 'package:pinetech/screens/category_listing_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -22,11 +24,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ZoomAndPostionProvider(context)),
       ],
       child: MaterialApp(
-        title: 'Image Container Demo',
+        title: 'Image zoom and drag',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: CategoryListScreen(),
+        home: const CategoryListScreen(),
       ),
     );
   }

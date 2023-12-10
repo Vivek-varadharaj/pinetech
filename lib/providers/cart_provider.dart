@@ -21,7 +21,7 @@ class CartProvider extends ChangeNotifier {
           return false;
         }
       }
-      print(cartProduct);
+
       notifyListeners();
       return true;
     }
