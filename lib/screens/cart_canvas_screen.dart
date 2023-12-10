@@ -108,7 +108,7 @@ class _CartCanvasScreenState extends State<CartCanvasScreen> {
                                               255, 195, 194, 194)
                                           : Colors.white,
                                       child: InteractiveViewer(
-                                        maxScale: 5,
+                                        maxScale: 2,
                                         scaleEnabled: zoom.selectedIndex ==
                                             zoom.images.indexOf(image),
                                         panEnabled: true,
