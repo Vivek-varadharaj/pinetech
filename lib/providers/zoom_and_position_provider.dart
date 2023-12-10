@@ -16,7 +16,15 @@ class ZoomAndPostionProvider extends ChangeNotifier {
 
   bool? isLongPressAndMove;
 
+  late double height;
+  late double width;
+  ZoomAndPostionProvider(BuildContext context) {
+    height = MediaQuery.of(context).size.height - 200;
+    width = MediaQuery.of(context).size.width - 40;
+  }
+
   int? selectedIndex;
+  List<MyImage> buildingList = [];
   List<MyImage> images = [
     MyImage(isSelected: false, position: const Offset(10, 10), scale: 1),
     MyImage(isSelected: false, position: const Offset(10, 120), scale: 1),
@@ -26,42 +34,50 @@ class ZoomAndPostionProvider extends ChangeNotifier {
     MyImage(isSelected: false, position: const Offset(120, 240), scale: 1),
   ];
 
-  void longPressMoveUpdate(MoveEvent details, MyImage image) async {
+  void longPressMoveUpdate(
+    MoveEvent details,
+    MyImage image,
+  ) async {
     selectedIndex = images.indexOf(image);
     isLongPressAndMove = true;
     notifyListeners();
 
     if (selectedIndex == images.indexOf(image)) {
       image.position += details.delta - details.localDelta;
-      print(image.position.dx);
-      print(300 - 100 * image.scale);
+
       // Ensure the image stays within bounds
       image.position = Offset(
         image.position.dx.clamp(0.0 + ((100 * image.scale - 100) / 2),
-            300.0 - (100 * image.scale - (100 * image.scale - 100) / 2)),
+            width - (100 * image.scale - (100 * image.scale - 100) / 2)),
         image.position.dy.clamp(0.0 + ((100 * image.scale - 100) / 2),
-            400.0 - (100 * image.scale - (100 * image.scale - 100) / 2)),
+            height - (100 * image.scale - (100 * image.scale - 100) / 2)),
       );
     }
 
     notifyListeners();
   }
 
-  void onInteraction(ScaleUpdateDetails details, MyImage image) {
-    if (image.scale < 2 && selectedIndex == images.indexOf(image)) {
+  void onInteraction(
+    ScaleUpdateDetails details,
+    MyImage image,
+  ) {
+    if (image.scale < 1.5 && selectedIndex == images.indexOf(image)) {
       image.position += details.focalPointDelta;
 
       // Ensure the image stays within bounds
       image.position = Offset(
         image.position.dx.clamp(0.0 + ((100 * image.scale - 100) / 2),
-            300.0 - (100 * image.scale - (100 * image.scale - 100) / 2)),
+            width - (100 * image.scale - (100 * image.scale - 100) / 2)),
         image.position.dy.clamp(0.0 + ((100 * image.scale - 100) / 2),
-            400.0 - (100 * image.scale - (100 * image.scale - 100) / 2)),
+            height - (100 * image.scale - (100 * image.scale - 100) / 2)),
       );
     }
-    image.scale *= details.scale;
 
-    image.scale = image.scale.clamp(1.0, 2);
+    if (selectedIndex == images.indexOf(image)) {
+      image.scale *= details.scale;
+
+      image.scale = image.scale.clamp(1.0, 1.5);
+    }
 
     notifyListeners();
   }

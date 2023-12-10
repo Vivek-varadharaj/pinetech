@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:pinch_zoom/pinch_zoom.dart';
+
 import 'package:pinetech/providers/cart_provider.dart';
 import 'package:pinetech/providers/category_provider.dart';
 import 'package:pinetech/providers/product_provider.dart';
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
-        ChangeNotifierProvider(create: (_) => ZoomAndPostionProvider()),
+        ChangeNotifierProvider(create: (_) => ZoomAndPostionProvider(context)),
       ],
       child: MaterialApp(
         title: 'Image Container Demo',

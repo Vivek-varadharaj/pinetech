@@ -12,23 +12,57 @@ import 'package:provider/provider.dart';
 class ProductProvider extends ChangeNotifier {
   late ApiRepository _apiRepository;
   List<Product> products = [];
-  bool isLoading = false;
+  bool isLoading = true;
 
   ProductProvider() {
     _apiRepository = ApiRepository(apiService: ApiService(baseUrl: baseUrl));
   }
 
-  void getProducts(String category) async {
+  Future<ResponseModel> getProducts(String category) async {
     isLoading = true;
     notifyListeners();
-    Response response = await _apiRepository.fetchProductsByCategory(category);
-    if (response.statusCode == 200) {
-      List<dynamic> tempResponse = json.decode(response.body)["products"];
+    try {
+      Response response =
+          await _apiRepository.fetchProductsByCategory(category);
+      if (response.statusCode == 200) {
+        List<dynamic> tempResponse = json.decode(response.body)["products"];
 
-      products = tempResponse.map((e) => Product.fromJson(e)).toList();
-      print(products);
+        products = tempResponse.map((e) => Product.fromJson(e)).toList();
+        print(products);
+        isLoading = false;
+        notifyListeners();
+        return ResponseModel(true, "success");
+      } else {
+        isLoading = false;
+        notifyListeners();
+        return ResponseModel(false, "Network call failed");
+      }
+    } catch (e) {
+      return ResponseModel(false, e.toString());
     }
-    isLoading = false;
+  }
+
+  Future<ResponseModel> fetchProductsByCategory(String category) async {
+    isLoading = true;
     notifyListeners();
+    try {
+      Response response =
+          await _apiRepository.fetchProductsByCategory(category);
+      if (response.statusCode == 200) {
+        List<dynamic> tempResponse = json.decode(response.body);
+
+        products = tempResponse.map((e) => Product.fromJson(e)).toList();
+        isLoading = false;
+
+        notifyListeners();
+        return ResponseModel(true, "success");
+      } else {
+        isLoading = false;
+        notifyListeners();
+        return ResponseModel(false, "Network call failed");
+      }
+    } catch (e) {
+      return ResponseModel(false, e.toString());
+    }
   }
 }

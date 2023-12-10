@@ -1,9 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pinetech/main.dart';
 import 'package:pinetech/providers/cart_provider.dart';
 import 'package:pinetech/providers/category_provider.dart';
 import 'package:pinetech/providers/product_provider.dart';
 import 'package:pinetech/screens/cart_canvas_screen.dart';
+import 'package:pinetech/widget/goto_canvas_button.dart';
+import 'package:pinetech/widget/product_card.dart';
 import 'package:provider/provider.dart';
 
 class ProductListScreen extends StatefulWidget {
@@ -28,6 +34,16 @@ class _ProductListScreenState extends State<ProductListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: Text(
+          "Select Products",
+          textAlign: TextAlign.left,
+          style: TextStyle(
+              fontSize: 28, fontWeight: FontWeight.bold, letterSpacing: 2),
+        ),
+      ),
       body: SafeArea(child:
           Consumer<ProductProvider>(builder: (context, productProvider, child) {
         return Consumer<CartProvider>(builder: (context, cartProvider, childe) {
@@ -35,69 +51,42 @@ class _ProductListScreenState extends State<ProductListScreen> {
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : Column(
-                  children: [
-                    Expanded(
-                      child: GridView.count(
-                        crossAxisCount: 2,
-                        children: productProvider.products
-                            .map((e) => GestureDetector(
-                                  onTap: () {
-                                    cartProvider.addOrRemoveProduct(e);
-                                  },
-                                  child: Card(
-                                    color: cartProvider.cartProduct
-                                            .where(
-                                                (element) => element.id == e.id)
-                                            .isNotEmpty
-                                        ? Colors.amber
-                                        : Colors.white,
-                                    child: Column(
-                                      children: [
-                                        Image.network(
-                                          e.imageUrl,
-                                          height: 100,
-                                          width: 100,
-                                          fit: BoxFit.contain,
-                                        ),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        Text(e.name),
-                                      ],
-                                    ),
-                                  ),
-                                ))
-                            .toList(),
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 30,
                       ),
-                    ),
-                    Consumer<CartProvider>(
-                        builder: (context, cartProvider, child) => cartProvider
-                                .cartProduct.isNotEmpty
-                            ? Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: InkWell(
+                      Expanded(
+                        child: StaggeredGrid.count(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          children: productProvider.products
+                              .map((product) => GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) => CartCanvasScreen(),
-                                    ));
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                    if (!cartProvider
+                                        .addOrRemoveProduct(product)) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              duration: Duration(seconds: 2),
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              content: Text(
+                                                  "Cant add more than 6 products")));
+                                    }
                                   },
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(vertical: 20),
-                                    clipBehavior: Clip.hardEdge,
-                                    decoration: BoxDecoration(
-                                        color: Colors.amber,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Center(
-                                        child: Text("Go to cart canvas")),
-                                  ),
-                                ),
-                              )
-                            : SizedBox())
-                  ],
+                                  child: ProductCard(product: product)))
+                              .toList(),
+                        ),
+                      ),
+                      const GotoCanvasButton()
+                    ],
+                  ),
                 );
         });
       })),

@@ -12,21 +12,35 @@ class CategoryProvider extends ChangeNotifier {
   late ApiRepository _apiRepository;
   List<Category> categories = [];
   Category? selectedCategory;
+  bool isLoading = false;
 
   CategoryProvider() {
     _apiRepository = ApiRepository(apiService: ApiService(baseUrl: baseUrl));
   }
 
-  Future<Response> getCategories() async {
-    Response response = await _apiRepository.fetchCategories();
-    if (response.statusCode == 200) {
-      List<dynamic> tempResponse = json.decode(response.body);
-
-      categories = tempResponse.map((e) => Category.fromJson(e)).toList();
-    } else {}
+  Future<ResponseModel> getCategories() async {
+    isLoading = true;
     notifyListeners();
+    try {
+      Response response = await _apiRepository.fetchCategories();
+      if (response.statusCode == 200) {
+        List<dynamic> tempResponse = json.decode(response.body);
 
-    return response;
+        categories = tempResponse.map((e) => Category.fromJson(e)).toList();
+        isLoading = false;
+
+        notifyListeners();
+        return ResponseModel(true, "success");
+      } else {
+        isLoading = false;
+        notifyListeners();
+        return ResponseModel(false, "Network call failed");
+      }
+    } catch (e) {
+      isLoading = false;
+      notifyListeners();
+      return ResponseModel(false, e.toString());
+    }
   }
 
   void setSelectedCategory(Category category) {
