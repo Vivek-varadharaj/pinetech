@@ -19,7 +19,7 @@ class _CartCanvasScreenState extends State<CartCanvasScreen> {
   bool isScaleEnabled = false;
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     Provider.of<ZoomAndPostionProvider>(context, listen: false).buildingList =
         Provider.of<ZoomAndPostionProvider>(context, listen: false)
@@ -38,7 +38,7 @@ class _CartCanvasScreenState extends State<CartCanvasScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: const Text(
-          "Categories",
+          "Zoom and drag",
           textAlign: TextAlign.left,
           style: TextStyle(
               fontSize: 28, fontWeight: FontWeight.bold, letterSpacing: 2),
