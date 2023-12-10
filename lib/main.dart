@@ -4,6 +4,7 @@ import 'package:pinch_zoom/pinch_zoom.dart';
 import 'package:pinetech/providers/cart_provider.dart';
 import 'package:pinetech/providers/category_provider.dart';
 import 'package:pinetech/providers/product_provider.dart';
+import 'package:pinetech/providers/zoom_and_position_provider.dart';
 import 'package:pinetech/screens/category_listing_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => ZoomAndPostionProvider()),
       ],
       child: MaterialApp(
         title: 'Image Container Demo',
@@ -30,5 +32,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
