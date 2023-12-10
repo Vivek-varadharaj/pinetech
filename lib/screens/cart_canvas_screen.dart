@@ -11,6 +11,7 @@ class CartCanvasScreen extends StatefulWidget {
 class _CartCanvasScreenState extends State<CartCanvasScreen> {
   int? _selectedIndex;
   bool? isLongPressAndMove;
+  bool isScaleEnabled = false;
   List<MyImage> images = [
     MyImage(isSelected: false, position: Offset(10, 10), scale: 1),
     MyImage(isSelected: false, position: Offset(10, 120), scale: 1),
@@ -39,22 +40,60 @@ class _CartCanvasScreenState extends State<CartCanvasScreen> {
         color: Colors.grey[200],
         child: Stack(
           clipBehavior: Clip.hardEdge,
-          children: images.map((image) {
+          children:[... images.map((image) {
             return Positioned(
               left: image.position.dx,
               top: image.position.dy,
-              child: GestureDetector(
-                onScaleStart: (details) {
+              child: XGestureDetector(
+                onLongPressMove: (details) {
                   setState(() {
-                    isLongPressAndMove = false;
+                    isLongPressAndMove = true;
                   });
+                  if (_selectedIndex == images.indexOf(image)) {
+                    {
+                      setState(() {
+                        image.position += details.localDelta;
+                        print(image.position.dx);
+                        print(300 - 100 * image.scale);
+                        // Ensure the image stays within bounds
+                        image.position = Offset(
+                          image.position.dx.clamp(
+                              0.0 + ((100 * image.scale - 100) / 2),
+                              300.0 -
+                                  (100 * image.scale -
+                                      (100 * image.scale - 100) / 2)),
+                          image.position.dy.clamp(
+                              0.0 + ((100 * image.scale - 100) / 2),
+                              400.0 -
+                                  (100 * image.scale -
+                                      (100 * image.scale - 100) / 2)),
+                        );
+                      });
+                    }
+                  }
+
+                  setState(() {
+                    _selectedIndex = images.indexOf(image);
+                  });
+                  // Toggle selection for the image on double tap
                 },
-                onScaleUpdate: (isLongPressAndMove == true)
-                    ? null
-                    : (details) {
-                        // print(details.focalPointDelta);
+                onLongPress: (event) {
+                  setState(() {
+                    _selectedIndex = images.indexOf(image);
+                  });
+                  // Toggle selection for the image on double tap
+                },
+                child: Transform.scale(
+                  scale: image.scale,
+                  child: Container(
+                    color: _selectedIndex == images.indexOf(image)
+                        ? Colors.red
+                        : Colors.white,
+                    child: InteractiveViewer(
+                      panEnabled: true,
+                      onInteractionUpdate: (details) {
                         if (_selectedIndex == images.indexOf(image)) {
-                          {
+                          if (image.scale < 1.5) {
                             setState(() {
                               image.position += details.focalPointDelta;
                               print(image.position.dx);
@@ -73,114 +112,17 @@ class _CartCanvasScreenState extends State<CartCanvasScreen> {
                                             (100 * image.scale - 100) / 2)),
                               );
                             });
-                            setState(() {
-                              image.scale *= details.scale;
-                              // Ensure the scale is within bounds
-                              image.scale = image.scale.clamp(1.0, 1.5);
-                            });
                           }
+                          setState(() {
+                            image.scale *= details.scale;
+                            // Ensure the scale is within bounds
+                            image.scale = image.scale.clamp(1.0, 1.5);
+                            if (image.scale >= 1.5 && !isScaleEnabled) {
+                              isScaleEnabled = true;
+                            }
+                          });
                         }
                       },
-                child: XGestureDetector(
-                  // onPanUpdate: (details) {
-                  //   print("panning");
-                  //   // Update the position of the selected image
-                  //   if (_selectedIndex == images.indexOf(image)) {
-                  //     setState(() {
-                  //       image.position += details.delta;
-                  //       // Ensure the image stays within bounds
-                  //       image.position = Offset(
-                  //         image.position.dx
-                  //             .clamp(0.0, 300.0 - 100.0 * image.scale),
-                  //         image.position.dy
-                  //             .clamp(0.0, 400.0 - 100.0 * image.scale),
-                  //       );
-                  //     });
-                  //   }
-                  // },
-                  // onLongPressEnd: () {
-                  //   setState(() {
-                  //     _selectedIndex = null;
-                  //   });
-                  // },
-                  onLongPressMove: (details) {
-                    setState(() {
-                      isLongPressAndMove = true;
-                    });
-                    if (_selectedIndex == images.indexOf(image)) {
-                      {
-                        setState(() {
-                          image.position += details.localDelta;
-                          print(image.position.dx);
-                          print(300 - 100 * image.scale);
-                          // Ensure the image stays within bounds
-                          image.position = Offset(
-                            image.position.dx.clamp(
-                                0.0 + ((100 * image.scale - 100) / 2),
-                                300.0 -
-                                    (100 * image.scale -
-                                        (100 * image.scale - 100) / 2)),
-                            image.position.dy.clamp(
-                                0.0 + ((100 * image.scale - 100) / 2),
-                                400.0 -
-                                    (100 * image.scale -
-                                        (100 * image.scale - 100) / 2)),
-                          );
-
-                          // setState(() {
-                          //   image.scale *= details.scale;
-                          //   // Ensure the scale is within bounds
-                          //   image.scale = image.scale.clamp(1.0, 1.5);
-                          // });
-                        });
-                      }
-                    }
-
-                    setState(() {
-                      _selectedIndex = images.indexOf(image);
-                    });
-                    // Toggle selection for the image on double tap
-                  },
-                  // onLongPressEnd: (details) {
-                  //   {
-                  //     setState(() {
-                  //       image.position = details.localPosition;
-                  //       print(image.position.dx);
-                  //       print(300 - 100 * image.scale);
-                  //       // Ensure the image stays within bounds
-                  //       image.position = Offset(
-                  //         image.position.dx.clamp(
-                  //             0.0 + ((100 * image.scale - 100) / 2),
-                  //             300.0 -
-                  //                 (100 * image.scale -
-                  //                     (100 * image.scale - 100) / 2)),
-                  //         image.position.dy.clamp(
-                  //             0.0 + ((100 * image.scale - 100) / 2),
-                  //             400.0 -
-                  //                 (100 * image.scale -
-                  //                     (100 * image.scale - 100) / 2)),
-                  //       );
-
-                  //       // setState(() {
-                  //       //   image.scale *= details.scale;
-                  //       //   // Ensure the scale is within bounds
-                  //       //   image.scale = image.scale.clamp(1.0, 1.5);
-                  //       // });
-                  //     });
-                  //   }
-                  // },
-                  onLongPress: (event) {
-                    setState(() {
-                      _selectedIndex = images.indexOf(image);
-                    });
-                    // Toggle selection for the image on double tap
-                  },
-                  child: Transform.scale(
-                    scale: image.scale,
-                    child: Container(
-                      color: _selectedIndex == images.indexOf(image)
-                          ? Colors.red
-                          : Colors.white,
                       child: Image.network(
                         Provider.of<CartProvider>(context)
                             .cartProduct[images.indexOf(image)]
@@ -194,7 +136,7 @@ class _CartCanvasScreenState extends State<CartCanvasScreen> {
                 ),
               ),
             );
-          }).toList(),
+          }).toList(), ],
         ),
       ),
     );
